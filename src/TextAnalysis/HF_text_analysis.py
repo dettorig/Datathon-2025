@@ -11,7 +11,7 @@ if not HF_API_KEY:
     raise ValueError("API key not found. Make sure you've set HF_API_KEY.")
 
 # Path to the text file
-file_path = "C:/Users/detto/WWI-Poster-Analysis-Datathon/data/Posters/texts/french/FL4984787_1_DIGI_0035_00001_VIEW_MAIN.jpg.txt"
+file_path = "C:/Users/Michael/WWI-Poster-Analysis-Datathon/data/Posters/texts/french/FL4984787_1_DIGI_0035_00001_VIEW_MAIN.jpg.txt"
 
 # Read the text file
 with open(file_path, "r", encoding="utf-8") as file:
@@ -21,7 +21,7 @@ with open(file_path, "r", encoding="utf-8") as file:
 prompt = f'''
 You are a historical text analyst. Your task is to analyze WW1 propaganda text by:
 1. Correcting common OCR errors (e.g., misread characters, missing spaces, incorrect word formations).
-2. Extracting metadata like data, author etc. and numerical scores for different attributes and in your thought process explain why you give a particular score. 
+2. Extracting metadata like date, author etc and numerical scores for different attributes and in your thought process explain why you give a particular score.
 
 Here is the raw text from a document:
 
@@ -33,19 +33,17 @@ Here is the raw text from a document:
 - Restore broken words and remove unnecessary line breaks.
 - ONLY return a valid JSON object with no additional text, reasoning, or explanations.
 - DON'T print your thinking in the response (</think>)
-- your response should only be from ''' "to" ''' of the json answer
+- your response should only be from ''' "to" ''' of the JSON answer
+
 
 ### Step 2: Text Analysis
-After correcting the OCR errors, analyze the corrected text and return results in JSON format and be sure to respect it strictly!
-
-The format is as following:
-
+After correcting the OCR errors, analyze the corrected text and return results in JSON format:
 ```json
 {{
   "date": "Extract date as dd-mm-yy",
   "publisher": "If there is the publisher extract it, otherwise assign NA",
   "language": "Retrieve language of text",
-  "author": "Find author's name, otherwise assign NA",
+  "author": "Find author's name, otherwise assign NA",
   "corrected_text": "Corrected version of the input text.",
   "sentiment": {{ "positive": X.XX, "negative": X.XX, "neutral": X.XX }},
   "emotion_scores": {{ "fear": X.XX, "anger": X.XX, "hope": X.XX, "glory": X.XX, "patriotism": X.XX }},
@@ -75,7 +73,7 @@ messages = [
 completion = client.chat.completions.create(
     model="deepseek-ai/DeepSeek-R1", 
 	messages=messages, 
-	max_tokens=3000,
+	max_tokens=15000,
 )
 
 print(completion.choices[0].message)
@@ -101,7 +99,7 @@ else:
 df = pd.json_normalize(response_data)
 
 # Append to an Excel file
-excel_path = "C:/Users/detto/WWI-Poster-Analysis-Datathon/data/analysis_results.xlsx"
+excel_path = "C:/Users/Michael/WWI-Poster-Analysis-Datathon/data/analysis_results.xlsx"
 
 try:
     existing_df = pd.read_excel(excel_path)
